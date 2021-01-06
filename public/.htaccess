@@ -1,0 +1,11 @@
+Options -Multiviews
+
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+RewriteCond $1 !^(index\.php|images|assets|doc|data|css|js|robots\.txt|favicon\.ico)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?url=$1 [L]
+
+</IfModule>
