@@ -5,7 +5,7 @@ class Flasher
     // action = save/create, delete, update
     // type = success, warning, danger, info / error (toastr)
 
-	public static function setNotifications($action, $description, $type)
+    public static function setNotifications($action, $description, $type)
     {
         $_SESSION['flash'] = [
             'action' => $action,
@@ -48,6 +48,29 @@ class Flasher
             </script>';
 
             unset($_SESSION['flash']);
+        }
+    }
+
+    // using bootstrap alert
+
+    public static function setAlertNotifications($action, $description, $type)
+    {
+        $_SESSION['flash_alert'] = [
+            'action' => $action,
+            'description' => $description,
+            'type' => $type,
+        ];
+    }
+
+    public static function alertData()
+    {
+        if ( isset($_SESSION['flash_alert']) ) 
+        {
+            echo '<div class="alert alert-'.$_SESSION['flash_alert']['type'].' alert-dismissible fade show" role="alert">
+                    <strong>'.$_SESSION['flash_alert']['action'].'</strong> '.$_SESSION['flash_alert']['description'].'
+                  </div>';
+
+            unset($_SESSION['flash_alert']);
         }
     }
 

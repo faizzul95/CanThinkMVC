@@ -1,12 +1,27 @@
 <?php
 
+require_once '../vendor/autoload.php';
+use Ozdemir\Datatables\Datatables;
+use Ozdemir\Datatables\DB\MySQL;
+
 class User extends Controller
 {
 	protected $user_model;
+	protected $dt;
 
 	public function __construct()
 	{
 		$this->user_model = $this->model('User_model');
+
+	    $config = [ 
+			'host'     => 'localhost',
+            'port'     => '3306',
+            'username' => 'root',
+            'password' => '',
+            'database' => 'canteen_db' 
+          ];
+
+	    $this->dt = new Datatables( new MySQL($config) );
 	}
 
 	public function index()
@@ -29,6 +44,23 @@ class User extends Controller
 		header('Location: ' . base_url . 'user');
 		exit;
 
+	}
+
+	public function testpage()
+	{
+		$data = [
+			'title' => 'List User',
+			'user' => $this->user_model->getAllUser(),
+		];
+		
+		$this->render('user/ssdt', $data);
+	}
+
+	// server side datatable
+	public function getDataDt()
+	{
+	    $this->dt->query('SELECT user_id, user_fullname, user_email, user_username, user_password FROM user');
+	    echo $this->dt->generate();
 	}
 
 	public function getupdate()
