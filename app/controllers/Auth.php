@@ -8,8 +8,9 @@ class Auth extends Controller
 	public function __construct()
 	{
 		$this->db = new Database;
-		$this->model = $this->model('User_model');
 		$this->session = new \Configuration\SessionManager();
+		$this->user_model = $this->model('User_model');
+		$this->role_model = $this->model('Role_model');
 	}
 
 	public function index()
@@ -38,7 +39,7 @@ class Auth extends Controller
 		  $usr_username = $this->db->escape($_POST['username']);
 	      $enteredPassword = $this->db->escape($_POST['password']);
 
-		  $data = $this->model->getUserByEmail($usr_username);
+		  $data = $this->user_model->getUserLogin($usr_username);
 
 	      if (count($data) > 1) {
 
@@ -46,7 +47,7 @@ class Auth extends Controller
 		      $status = $data['status_id'];
 		      $roleid = $data['role_id'];
 
-		      $role = $this->model->getUserRole($roleid);
+		      $role = $this->role_model->getUserRole($roleid);
 		      $rolename = $role['role_name'];
 
 		      $result = $this->passDecrypt($current_password, $enteredPassword);
@@ -112,21 +113,9 @@ class Auth extends Controller
 
 	public function logout()
 	{
-		// IF USE COOKIE UNCOMMENT THIS
-		// if (isset($_COOKIE)) {
-		//     foreach($_COOKIE as $name => $value) {
-		//         if ($name != "preservecookie") // Name of the cookie you want to preserve 
-		//         {
-		//             setcookie($name, '', 1); // Better use 1 to avoid time problems, like timezones
-		//             setcookie($name, '', 1, '/');
-		//         }
-		//     }
-		// }
-
 		$this->session->clear();
-
 		Flasher::setNotifications('Berjaya !', 'Berjaya Log Keluar', 'success');
-		header('Location: ' . base_url . 'auth');
+		header('Location: ' . base_url);
 		exit;
 	}
 

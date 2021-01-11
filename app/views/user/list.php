@@ -6,7 +6,7 @@
   <button type="button" class="btn btn-primary float-right showAdd" data-toggle="modal" data-target="#userModal" style="margin-bottom: 10px;">
       Tambah Pengguna
   </button>    
-  <table class="table table-bordered">
+  <table class="table table-bordered table-responsive">
     <thead>
       <tr>
         <th>#</th>
@@ -77,16 +77,25 @@
           <div class="form-group">
             <label for="role_id">Peranan</label>
             <select class="form-control" id="role_id" name="role_id">
-                <option value="1">Lembaga Peperiksaan Malaysia</option>
-                <option value="2">Pentadbir</option>
-                <option value="3">Guru</option>
-                <option value="4">Ibu Bapa</option>
-                <option value="5">Pelajar</option>
+                <option value="">- Sila Pilih -</option>
+                <?php foreach ($data['roleData'] as $row) {
+                    echo "<option value='".$row['role_id']."'>".$row['role_name']."</option>";
+                } ?>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="status_id">Status</label>
+            <select class="form-control" id="status_id" name="status_id">
+                <option value="">- Sila Pilih -</option>
+                <?php foreach ($data['statusData'] as $row) {
+                    echo "<option value='".$row['status_id']."'>".$row['status_name']."</option>";
+                } ?>
             </select>
           </div>
 
           <div class="modal-footer">
-            <input type="text" name="user_id" id="user_id">
+            <input type="hidden" name="user_id" id="user_id">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             <button type="submit" class="btn btn-primary">Tambah</button>
           </div>
@@ -133,7 +142,8 @@
                     $('#user_email').val(data.user_email);
                     $('#user_username').val(data.user_username);
                     $('#user_password').val(data.user_password);
-                    $('#role_id').val(data.role_id);
+                    $('#role_id').val(data.role_id).attr("selected", "selected");
+                    $('#status_id').val(data.status_id).attr("selected", "selected");
                     $('#user_id').val(data.user_id);
                     $('#passwordFill').css('display', 'none');
                 }

@@ -1,8 +1,8 @@
 <?php
 
 require_once '../vendor/autoload.php';
-use Ozdemir\Datatables\Datatables;
-use Ozdemir\Datatables\DB\MySQL;
+// use Ozdemir\Datatables\Datatables;
+// use Ozdemir\Datatables\DB\MySQL;
 
 class User extends Controller
 {
@@ -11,17 +11,10 @@ class User extends Controller
 
 	public function __construct()
 	{
+		$this->session();
 		$this->user_model = $this->model('User_model');
-
-	    $config = [ 
-			'host'     => 'localhost',
-            'port'     => '3306',
-            'username' => 'root',
-            'password' => '',
-            'database' => 'canteen_db' 
-          ];
-
-	    $this->dt = new Datatables( new MySQL($config) );
+		$this->role_model = $this->model('Role_model');
+		$this->status_model = $this->model('Status_model');
 	}
 
 	public function index()
@@ -29,6 +22,8 @@ class User extends Controller
 		$data = [
 			'title' => 'List User',
 			'user' => $this->user_model->getAllUser(),
+			'roleData' => $this->role_model->getAllRole(),
+			'statusData' => $this->status_model->getAllStatus(),
 		];
 		
 		$this->render('user/list', $data);
@@ -44,23 +39,6 @@ class User extends Controller
 		header('Location: ' . base_url . 'user');
 		exit;
 
-	}
-
-	public function testpage()
-	{
-		$data = [
-			'title' => 'List User',
-			'user' => $this->user_model->getAllUser(),
-		];
-		
-		$this->render('user/ssdt', $data);
-	}
-
-	// server side datatable
-	public function getDataDt()
-	{
-	    $this->dt->query('SELECT user_id, user_fullname, user_email, user_username, user_password FROM user');
-	    echo $this->dt->generate();
 	}
 
 	public function getupdate()
@@ -88,5 +66,32 @@ class User extends Controller
 		header('Location: ' . base_url . 'user');
 		exit;
 	}
+
+	// public function testpage()
+	// {
+	// 	$data = [
+	// 		'title' => 'List User',
+	// 		'user' => $this->user_model->getAllUser(),
+	// 	];
+		
+	// 	$this->render('user/testpage', $data);
+	// }
+
+	// server side datatable
+	// public function getDataDt()
+	// {
+	
+	//     $config = [ 
+	// 				'host'     => 'localhost',
+	// 		        'port'     => '3306',
+	// 		        'username' => 'root',
+	// 		        'password' => '',
+	// 		        'database' => 'canteen_db' 
+	// 		      ];
+
+	//     $this->dt = new Datatables( new MySQL($config) );
+	//     $this->dt->query('SELECT user_id, user_fullname, user_email, user_username, user_password FROM user');
+	//     echo $this->dt->generate();
+	// }
 
 }

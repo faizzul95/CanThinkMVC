@@ -55,6 +55,18 @@ class SessionManager implements SessionInterface
 
     public function clear(): void
     {
+
+        // IF DON'T USE COOKIE COMMENT THIS
+        if (isset($_COOKIE)) {
+            foreach($_COOKIE as $name => $value) {
+                // if ($name != "preservecookie") // Name of the cookie you want to preserve 
+                // {
+                    setcookie($name, '', 1); // Better use 1 to avoid time problems, like timezones
+                    setcookie($name, '', 1, '/');
+                // }
+            }
+        }
+
         session_unset();
         session_destroy();
     }

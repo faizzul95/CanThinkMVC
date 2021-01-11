@@ -20,6 +20,16 @@ class Controller
         return new $model;
     }
 
+    public function session()
+    {
+       $this->session = new \Configuration\SessionManager();
+
+       if (!$this->session->has('userID')) {
+          header('Location: ' . base_url . 'auth/logout');
+       }
+
+    }
+
     // set notification Toastr
     public function setToastr($type, $result)
     {
@@ -97,21 +107,21 @@ class Controller
         }
     }
 
-    public function date_format($str, $pos){
+    public function date_format($str, $type){
         if($str!=NULL){
-            if($pos==1){
+            if($type==1){
                 $date = date('d-m-Y',strtotime($str));
             }
-            if($pos==2){
+            if($type==2){
                 $date = date('Y-m-d',strtotime($str));
             }
-            if($pos==3){
+            if($type==3){
                 $date = date('d F Y',strtotime($str));
             }
-            if($pos==4){ 
+            if($type==4){ 
                 $date = date('Ymd',strtotime($str));
             }
-            if($pos==5){
+            if($type==5){
                 $date = date('d-M-Y',strtotime($str));
             }
             return $date;

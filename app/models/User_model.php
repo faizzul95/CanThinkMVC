@@ -2,11 +2,12 @@
 
 // Example : https://github.com/ThingEngineer/PHP-MySQLi-Database-Class
 
-class User_model 
+class User_model extends Model
 {
     private $db;
     protected $table      = 'user';
     protected $primaryKey = 'user_id';
+    protected $foreignKey = '';
 
     public function __construct()
     {
@@ -37,9 +38,11 @@ class User_model
         return $data;
     }
 
-    public function getUserRole($params = NULL)
+    public function getUserLogin($params = NULL)
     {
-        $data = $this->db->where("role_id", $params)->fetchRow('master_role');
+        $this->db->where('user_email', $params);
+        $this->db->orWhere('user_username', $params);
+        $data = $this->db->fetchRow($this->table);
         return $data;
     }
 
