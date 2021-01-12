@@ -130,4 +130,31 @@ class Controller
         }
     }
 
+    public function error($type = NULL){
+
+    if ($type == '403') {
+
+        $data = [
+            'title' => '403 ACCESS FORBIDDEN',
+        ];
+
+        $this->view('error/403', $data);
+
+    }else if ($type == '404') {
+
+        $data = [
+            'title' => '404 Page Not Found',
+        ];
+
+        $this->view('error/404', $data);
+
+    }else if ($type == '500') {
+
+        $data = [
+            'title' => '500 Internal Errors',
+        ];
+
+        $this->view('error/500', $data);
+    }
+
 }
