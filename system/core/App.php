@@ -8,13 +8,19 @@ class App
 
     function __construct()
     {
+        $this->session = new \Configuration\SessionManager();
         $url = $this->urlParse();
 
         // Controller
-        if ( file_exists('../app/controllers/'. $url[0] . '.php') ) {
-            $this->controller = $url[0];
+        if ( file_exists('../app/controllers/'. ucfirst($url[0]) . '.php') ) {
+            $this->controller = ucfirst($url[0]);
             unset($url[0]);
+        } else if ( !file_exists('../app/controllers/'. ucfirst($url[0]) . '.php') AND !empty($url[0]) ) {
+            $this->controller = 'Errorpage';
         }
+
+        // check permission
+        $this->permission($this->controller);
 
         require_once '../app/controllers/'. $this->controller . '.php';
         $this->controller = new $this->controller;
@@ -47,6 +53,34 @@ class App
             $url = explode('/', $url);
 
             return $url;
+        }
+
+    }
+
+    public function permission($controllerName)
+    {
+        // check with controller name
+        $arrSuperAdminController = array('');
+        $arrAdminController = array('');
+        $arrSupportController = array('');
+
+        $sessionRoleID = $this->session->get('roleID');
+
+        $result = false;
+        
+        if ($sessionRoleID == 1 && in_array($controllerName, $arrSuperAdminController))
+        {
+          $result = true;
+        }else if ($sessionRoleID == 2 && in_array($controllerName, $arrAdminController)) {
+          $result = true;
+        }else if ($sessionRoleID == 3 && in_array($controllerName, $arrSupportController)) {
+          $result = true;
+        }else if (empty($sessionRoleID)) {
+           $result = true;
+        }
+
+        if (!$result) {
+            $this->controller = 'Errorpage';
         }
 
     }

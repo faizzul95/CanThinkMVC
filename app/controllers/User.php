@@ -7,7 +7,6 @@ require_once '../vendor/autoload.php';
 class User extends Controller
 {
 	protected $user_model;
-	protected $dt;
 
 	public function __construct()
 	{

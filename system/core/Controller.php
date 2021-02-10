@@ -37,25 +37,25 @@ class Controller
         if ($type == 'create') {
 
             if ($result > 0) {
-                Flasher::setNotifications('Berjaya !', 'Berjaya Disimpan', 'success');
+                Flasher::setNotifications('Success !', 'Save successfully', 'success');
             }else{
-                Flasher::setNotifications('Gagal !', 'Tidak Berjaya Disimpan', 'error');
+                Flasher::setNotifications('Failed !', 'Save unsuccessfully', 'error');
             }
 
         }else if ($type == 'update') {
 
             if ($result > 0) {
-                Flasher::setNotifications('Berjaya !', 'Berjaya Dikemaskini', 'success');
+                Flasher::setNotifications('Success !', 'Update successfully', 'success');
             }else{
-                Flasher::setNotifications('Gagal !', 'Tidak Berjaya Dikemaskini', 'error');
+                Flasher::setNotifications('Failed !', 'Update unsuccessfully', 'error');
             }
 
         }else if ($type == 'delete') {
 
             if ($result > 0) {
-                Flasher::setNotifications('Berjaya !', 'Berjaya dihapus', 'success');
+                Flasher::setNotifications('Success !', 'Remove successfully', 'success');
             }else{
-                Flasher::setNotifications('Gagal !', 'Tidak Berjaya Dihapus', 'error');
+                Flasher::setNotifications('Failed !', 'Remove unsuccessfully', 'error');
             }
             
         }
@@ -135,7 +135,7 @@ class Controller
         if ($type == '403') {
 
             $data = [
-                'title' => '403 ACCESS FORBIDDEN',
+                'title' => '403 FORBIDDEN',
             ];
 
             $this->view('error/403', $data);
@@ -155,6 +155,50 @@ class Controller
             ];
 
             $this->view('error/500', $data);
+        }
+       
+    }
+
+    public function uppercase($str){
+        $str = ucwords(strtolower($str));
+        return $str;
+    }
+
+    public function currency_format($amount){
+        return number_format((float)$amount, 2, '.', '');
+    }
+
+    public function folder($category = NULL, $foldername = 'default'){
+
+        $folder = 'document/'.$category.'/'.$foldername;
+        if (!is_dir($folder)) {
+            mkdir($folder, 0755, true);
+        }
+
+        return $folder;
+
+    }
+
+    public function removefolder($category = NULL, $foldername = 'default'){
+
+        if (empty($category)) {
+            $category = 'defaultfolder';
+        }
+
+        $dir = 'document/'.$category.'/'.$foldername;
+
+        $structure = glob(rtrim($dir, "/").'/*');
+        if (is_array($structure)) {
+            foreach($structure as $file) {
+                if (is_dir($file)) recursiveRemove($file);
+                elseif (is_file($file)) unlink($file);
+            }
+        }
+
+        if (rmdir($dir)) {
+            return true;
+        }else{
+            return false;
         }
 
     }
